@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book a Trial</title>
     <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css">
     <style>
         :root {
             --primary-color: #1c90ff;
@@ -126,7 +127,7 @@
                         <option value="+91">🇮🇳 +91</option>
                         <!-- Add more country options here -->
                     </select>
-                    <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="XXXXXXXXXX" oninput="formatPhoneNumber()">
+                    <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="XXXXXXXXXX">
                 </div>
 
                 <label for="time">What is your preferred time to connect?<span class="required">*</span></label>
@@ -154,6 +155,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput.min.js"></script>
     <script>
         const formOverlay = document.getElementById('form-overlay');
         const closeButton = document.getElementById('close-button');
@@ -170,76 +172,68 @@
             submitButton.disabled = true;
             submitButton.innerText = 'Submitting...';
 
-            const formData = new FormData(this);
-            const selectedCenter = formData.get('center');
-            let apiUrl = 'https://api.momence.com/integrations/customer-leads/13752/collect';
-            let token = 'DOjMVL37Q5';
-            let redirectUrl = 'https://momence.com/u/physique-57-india-fffoSp';
-
-            if (selectedCenter === 'Kenkere House, Bengaluru') {
-                apiUrl = 'https://api.momence.com/integrations/customer-leads/33905/collect';
-                token = 'qy71rOk8en';
-                redirectUrl = 'https://momence.com/u/physique-57-bengaluru-0MU0AA';
-            }
-
-            const data = {
-                firstName: formData.get('firstName'),
-                lastName: formData.get('lastName'),
-                email: formData.get('email'),
-                phoneNumber: document.getElementById('countryCode').value + formData.get('phoneNumber'),
-                time: formData.get('time'),
-                center: formData.get('center')
-            };
-
-            // Submit to Momence API
-            fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                body: JSON.stringify(data)
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to submit data to the Momence API.');
-                }
-                return response.json();
-            }).then(result => {
-                if (result.status === 'success') {
-                    // Submit to Google Apps Script
-                    return fetch(webAppUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    });
-                } else {
-                    throw new Error(result.message);
-                }
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to submit data to the Google Sheet.');
-                }
-                return response.json();
-            }).then(result => {
-                if (result.status === 'success') {
-                    window.location.href = redirectUrl;
-                } else {
-                    throw new Error(result.message);
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('There was an error processing your request. Please try again later.');
-                submitButton.disabled = false;
-                submitButton.innerText = 'Submit';
-            });
-        });
-
-        function formatPhoneNumber() {
+            // Initialize intlTelInput
             const phoneNumberInput = document.getElementById('phoneNumber');
-            phoneNumberInput.value = phoneNumberInput.value.replace(/[^0-9]/g, '');
-        }
-    </script>
-</body>
-</html>
+            const iti = window.intlTelInput(phoneNumberInput, {
+                initialCountry: 'auto',
+                separateDialCode: true,
+                utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.js'});
+        // Get selected country code
+        const countryCode = iti.getSelectedCountryData().dialCode;
+
+        const formData = new FormData(this);
+        const data = {
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+            email: formData.get('email'),
+            phoneNumber: countryCode + formData.get('phoneNumber'),
+            time: formData.get('time'),
+            center: formData.get('center')
+        };
+
+        // Submit to Momence API and Google Apps Script
+        fetch('https://api.momence.com/integrations/customer-leads/13752/collect', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer YOUR_MOMENCE_TOKEN'
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to submit data to the Momence API.');
+            }
+            return response.json();
+        }).then(result => {
+            if (result.status === 'success') {
+                return fetch(webAppUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+            } else {
+                throw new Error(result.message);
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to submit data to the Google Sheet.');
+            }
+            return response.json();
+        }).then(result => {
+            if (result.status === 'success') {
+                window.location.href = 'https://momence.com/u/physique-57-india-fffoSp';
+            } else {
+                throw new Error(result.message);
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('There was an error processing your request. Please try again later.');
+            submitButton.disabled = false;
+            submitButton.innerText = 'Submit';
+        });
+    });
+</script>
+</body>    
+</html>    
