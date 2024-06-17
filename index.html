@@ -53,7 +53,7 @@
             font-family: 'Play', sans-serif;
         }
         #lead-form input[type="text"], #lead-form input[type="email"], #lead-form input[type="tel"], #lead-form select {
-            width: calc(100% - 10px);
+            width: 100%;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid var(--input-border);
@@ -63,7 +63,7 @@
             font-size: 12px;
         }
         #lead-form label[for="phoneNumber"], #lead-form input[type="tel"], #lead-form .iti {
-            width: calc(100% - 10px);
+            width: 100%;
         }
         #lead-form .iti {
             margin-top: 10px;
@@ -73,7 +73,7 @@
             justify-content: center;
             margin-top: 25px;
             margin-bottom: 5px;
-            width: calc(100% - 10px);   
+            width: 100%;   
         }
 
         button {
@@ -90,6 +90,7 @@
             border: none;
             font-size: 12px;
             font-family: 'Play', sans-serif;
+            width: 100%; /* Make the button wider */
         }
         button.submit:hover {
             background-color: var(--hover-color);
@@ -127,7 +128,7 @@
                 <input type="tel" id="phoneNumber" name="phoneNumber" required>
                 
                 <label for="pincode">Pincode <span class="required">*</span></label>
-                <input type="text" id="pincode" name="pincode" required>
+                <input type="number" id="pincode" name="pincode" required>
             
                 <label for="center">Select a Studio Location<span class="required">*</span></label>
                 <select id="center" name="center" required>
