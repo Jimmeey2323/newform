@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book a Trial</title>
     <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <style>
         :root {
             --primary-color: #1c90ff;
@@ -24,7 +24,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: transparent;
+            background-color: transparent; /* Transparent background */
             z-index: 1000;
         }
         .form-container {
@@ -64,13 +64,14 @@
         }
         #button-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             margin-top: 25px;
             margin-bottom: 5px;
-            width: calc(100% - 10px);
+            width: calc(100% - 10px);   
         }
+
         button {
-            width: 48%;
+            width: 100%;
             padding: 10px;
             border-radius: 4px;
             cursor: pointer;
@@ -81,17 +82,11 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
+            font-size: 12px;
+            font-family: 'Play', sans-serif;
         }
         button.submit:hover {
             background-color: var(--hover-color);
-        }
-        button.close {
-            background-color: #888;
-            color: white;
-            border: none;
-        }
-        button.close:hover {
-            background-color: #666;
         }
         small {
             display: block;
@@ -100,6 +95,7 @@
             margin-top: -5px;
             margin-bottom: 5px;
         }
+      
         .required {
             color: red;
         }
@@ -113,127 +109,95 @@
                     <img src="https://i.imgur.com/9mOm7gP.png" alt="Logo">
                 </div>
                 <label for="firstName">First Name <span class="required">*</span></label>
-                <input type="text" id="firstName" name="firstName" required>
-
-                <label for="lastName">Last Name <span class="required">*</span></label>
-                <input type="text" id="lastName" name="lastName" required>
-
-                <label for="email">Email <span class="required">*</span></label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="phoneNumber">Phone Number <span class="required">*</span></label>
-                <div style="display: flex;">
-                    <select id="countryCode" required>
-                        <option value="+91">🇮🇳 +91</option>
-                        <!-- Add more country options here -->
-                    </select>
-                    <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="XXXXXXXXXX">
-                </div>
-
-                <label for="time">What is your preferred time to connect?<span class="required">*</span></label>
-                <select id="time" name="time" required>
-                    <option value="" disabled selected>Preferred Time</option>
-                    <option value="Any">Any</option>
-                    <option value="Morning">Morning</option>
-                    <option value="Noon">Noon</option>
-                    <option value="Evening">Evening</option>
-                </select>
-
+                    <input type="text" id="firstName" name="firstName" required>
+                    
+                    <label for="lastName">Last Name <span class="required">*</span></label>
+                    <input type="text" id="lastName" name="lastName" required>
+                    
+                    <label for="email">Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required>
+                    
+                    <label for="phoneNumber">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" required>
+                    
+                    <label for="pincode">Pincode <span class="required">*</span></label>
+                    <input type="text" id="pincode" name="pincode" required>
+                
                 <label for="center">Select a Studio Location<span class="required">*</span></label>
-                <select id="center" name="center" required>
-                    <option value="" disabled selected>Select Preferred Studio Location</option>
-                    <option value="Supreme Headquarters, Bandra">Supreme Headquarters, Bandra</option>
-                    <option value="Kwality House, Kemps Corner">Kwality House, Kemps Corner</option>
-                    <option value="Kenkere House, Bengaluru">Kenkere House, Bengaluru</option>
-                </select>
-
+                    <select id="center" name="center" required>
+                        <option value="" disabled selected>Select Preferred Studio Location</option>
+                        <option value="Supreme Headquarters, Bandra">Supreme Headquarters, Bandra</option>
+                        <option value="Kwality House, Kemps Corner">Kwality House, Kemps Corner</option>
+                    </select>
+                
                 <div id="button-container">
-                    <button id="close-button" class="close">Close</button>
                     <button type="submit" class="submit">Submit</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <script>
-        const formOverlay = document.getElementById('form-overlay');
-        const closeButton = document.getElementById('close-button');
-        const submitButton = document.querySelector('button[type=submit]');
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbxFeoumSkCy6n2eCAl2dTrBU2hICOQ4KS6AMv4oEmHNLyQU1dxs1K-iXMAx_vuR8bk/exec'; // Replace with your Google Apps Script Web App URL
-
-        closeButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            formOverlay.style.display = 'none';
+        const phoneInputField = document.querySelector("#phoneNumber");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            initialCountry: "in",
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
         });
+
+        const formOverlay = document.getElementById('form-overlay');
+        const submitButton = document.querySelector('button[type=submit]');
 
         document.getElementById('lead-form').addEventListener('submit', function(event) {
             event.preventDefault();
             submitButton.disabled = true;
             submitButton.innerText = 'Submitting...';
 
-            // Initialize intlTelInput
-            const phoneNumberInput = document.getElementById('phoneNumber');
-            const iti = window.intlTelInput(phoneNumberInput, {
-                initialCountry: 'auto',
-                separateDialCode: true,
-                utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.js'});
-        // Get selected country code
-        const countryCode = iti.getSelectedCountryData().dialCode;
+            const formData = new FormData(this);
+            const data = {
+                token: "DOjMVL37Q5",
+                sourceId: "8082",
+                ...Object.fromEntries(formData)
+            };
 
-        const formData = new FormData(this);
-        const data = {
-            firstName: formData.get('firstName'),
-            lastName: formData.get('lastName'),
-            email: formData.get('email'),
-            phoneNumber: countryCode + formData.get('phoneNumber'),
-            time: formData.get('time'),
-            center: formData.get('center')
-        };
-
-        // Submit to Momence API and Google Apps Script
-        fetch('https://api.momence.com/integrations/customer-leads/13752/collect', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer YOUR_MOMENCE_TOKEN'
-            },
-            body: JSON.stringify(data)
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to submit data to the Momence API.');
-            }
-            return response.json();
-        }).then(result => {
-            if (result.status === 'success') {
-                return fetch(webAppUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-            } else {
-                throw new Error(result.message);
-            }
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to submit data to the Google Sheet.');
-            }
-            return response.json();
-        }).then(result => {
-            if (result.status === 'success') {
-                window.location.href = 'https://momence.com/u/physique-57-india-fffoSp';
-            } else {
-                throw new Error(result.message);
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-            alert('There was an error processing your request. Please try again later.');
-            submitButton.disabled = false;
-            submitButton.innerText = 'Submit';
+            fetch('https://api.momence.com/integrations/customer-leads/13752/collect', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer DOjMVL37Q5'
+                },
+                body: JSON.stringify(data)
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to submit: ' + response.statusText);
+                }
+                // Trigger Meta Pixel only on successful submission
+                fbq('track', 'Lead');
+                window.top.location.href = 'https://momence.com/u/physique-57-india-fffoSp';
+            }).catch((error) => {
+                console.error('Error:', error);
+                alert(error.message);
+                submitButton.disabled = false; // Re-enable the button if there's an error
+                submitButton.innerText = 'Submit';
+            });
         });
-    });
-</script>
-</body>    
-</html>    
+    </script>
+
+    <!-- Meta Pixel script -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window,document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '527819981439695');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img src="https://www.facebook.com/tr?id=527819981439695&ev=PageView&noscript=1" />
+    </noscript>
+</body>
+</html>
