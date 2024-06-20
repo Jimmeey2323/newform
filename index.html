@@ -1,54 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <script src="https://apis.google.com/js/api.js"></script>
-  <title>Therapy Booking Form</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enhanced Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f4f9;
-      color: #333;
+    :root {
+      --primary-color: #1c90ff;
+      --hover-color: #003870;
+      --text-color: #333; 
+      --background-color: #f4f4f9;
+      --input-background: #fff;
+      --input-border: #ccc;
+      --success-color: #28a745;
+      --error-color: #dc3545;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --border-radius: 8px;
     }
-    .form-container {
+    body {
+      font-family: 'Play', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .form-container, .table-container {
+      width: 90%;
+      max-width: 800px;
       margin: 20px;
       padding: 20px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: var(--input-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .form-container:hover, .table-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
     }
     .form-container img {
       display: block;
       margin: 0 auto 20px;
+      width: 100px;
+      height: auto;
     }
-    .form-container label {
+    label {
       display: block;
-      margin: 10px 0 5px;
+      margin-bottom: 8px;
+      font-weight: 500;
     }
-    .form-container input, .form-container select {
+    select, input[type="date"], textarea {
       width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid var(--input-border);
+      border-radius: var(--border-radius);
+      box-sizing: border-box;
+      transition: border-color 0.3s, box-shadow 0.3s;
     }
-    .form-container button {
-      background-color: #1c90ff;
+    select:focus, input[type="date"]:focus, textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 5px rgba(28, 144, 255, 0.5);
+    }
+    button {
+      background-color: var(--primary-color);
       color: white;
       cursor: pointer;
-      padding: 10px;
+      padding: 10px 20px;
       border: none;
-      border-radius: 4px;
+      border-radius: var(--border-radius);
       margin: 10px 0;
+      transition: background-color 0.3s, transform 0.3s;
     }
-    .form-container button:hover {
-      background-color: #003870;
+    button:hover {
+      background-color: var(--hover-color);
+      transform: translateY(-2px);
     }
     .spinner {
       display: none;
       margin: 20px auto;
       border: 16px solid #f3f3f3;
       border-radius: 50%;
-      border-top: 16px solid #3498db;
+      border-top: 16px solid var(--primary-color);
       width: 120px;
       height: 120px;
       animation: spin 2s linear infinite;
@@ -57,123 +96,279 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    .success-message {
+    .success-message, .error-message {
       display: none;
-      color: green;
       margin-top: 20px;
+      text-align: center;
+      padding: 10px;
+      border-radius: var(--border-radius);
+    }
+    .success-message {
+      background-color: var(--success-color);
+      color: white;
+    }
+    .error-message {
+      background-color: var(--error-color);
+      color: white;
+    }
+    .table-container {
+      overflow-x: auto;
+      max-width:100%;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+      font-weight: 600;
+    }
+    .delete-btn {
+      background-color: #ff4c4c;
+      color: white;
+      cursor: pointer;
+      padding: 5px;
+      border: none;
+      border-radius: var(--border-radius);
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .delete-btn:hover {
+      background-color: #ff0000;
+      transform: translateY(-2px);
+    }
+    textarea {
+      width: 100%;
+      height: 60px;
+    }
+
+    /* media query for tablets and larger screens */
+  @media (min-width: 768px) {
+    body, form-container, table-container {
+        font-size: 18px; /* Increase font size for larger screens */
+        padding: 20px;
+    }
+    th, td {
+        padding: 8px;
+      }
+      .form-container button {
+        width: 100%;
+      }
+  }
+    .logo{
+      max-width:70px;
+      margin-bottom:20px;
     }
   </style>
 </head>
 <body>
   <div class="form-container">
     <img src="https://i.imgur.com/9mOm7gP.png" alt="Logo">
-    <label for="firstName">First Name:</label>
-    <input type="text" id="firstName" required>
-    
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" required>
-    
-    <label for="phoneNumber">Phone Number:</label>
-    <input type="tel" id="phoneNumber" required>
-    
-    <label for="email">Email:</label>
-    <input type="email" id="email" required>
-    
-    <label for="cryotherapyTimeSlot">Select a time slot for Cryotherapy:</label>
-    <select id="cryotherapyTimeSlot" required>
-      <option value="9:30-9:40am">9:30-9:40am</option>
-      <option value="9:45-9:55am">9:45-9:55am</option>
-      <option value="10:00-10:10am">10:00-10:10am</option>
-      <option value="10:15-10:25am">10:15-10:25am</option>
-      <option value="10:30-10:40am">10:30-10:40am</option>
-      <option value="10:45-10:55am">10:45-10:55am</option>
-      <option value="11:00-11:10am">11:00-11:10am</option>
+    <label for="trainerName">Trainer Name:</label>
+    <select id="trainerName">
+      <option value="">Select a trainer</option>
+      <option value="Anisha Shah">Anisha Shah</option>
+      <option value="Atulan Purohit">Atulan Purohit</option>
+      <option value="Jahnavi Jain">Jahnavi Jain</option>
+      <option value="Kajol Kanchan">Kajol Kanchan</option>
+      <option value="Karan Bhatia">Karan Bhatia</option>
+      <option value="Karanvir Bhatia">Karanvir Bhatia</option>
+      <option value="Mrigakshi Jaiswal">Mrigakshi Jaiswal</option>
+      <option value="Pranjali Jain">Pranjali Jain</option>
+      <option value="Pushyank Nahar">Pushyank Nahar</option>
+      <option value="Reshma Sharma">Reshma Sharma</option>
+      <option value="Richard D'Costa">Richard D'Costa</option>
+      <option value="Rohan Dahima">Rohan Dahima</option>
+      <option value="Saniya Jaiswal">Saniya Jaiswal</option>
+      <option value="Shruti Kulkarni">Shruti Kulkarni</option>
+      <option value="Shruti Suresh">Shruti Suresh</option>
+      <option value="Upasna Paranjpe">Upasna Paranjpe</option>
+      <option value="Vivaran Dhasmana">Vivaran Dhasmana</option>
+      <!-- Add more options as needed -->
     </select>
-    
-    <label for="additionalTherapy">Select a therapy in addition to your cryotherapy session:</label>
-    <select id="additionalTherapy" onchange="updateTherapyTimeSlots()" required>
-      <option value="AVACEN">AVACEN - Advanced Vascular Circulation Enhancement (20 minutes)</option>
-      <option value="Normatec">Normatec Compression Therapy (20 minutes)</option>
+    <label for="date">Date:</label>
+    <input type="date" id="date">
+    <label for="center">Center:</label>
+    <select id="center">
+      <option value="">Select a center</option>
+      <option value="Supreme HQ, Bandra">Supreme HQ, Bandra</option>
+      <option value="Kwality House, Kemps Corner">Kwality House, Kemps Corner</option>
+      <option value="Kenkere House">Kenkere House</option>
     </select>
-    
-    <label for="therapyTimeSlot">Select a time slot for the additional therapy:</label>
-    <select id="therapyTimeSlot" required>
-      <option value="9:30-9:50am">9:30-9:50am</option>
-      <option value="10:00-10:20am">10:00-10:20am</option>
-      <option value="10:30-10:50am">10:30-10:50am</option>
-      <option value="11:00-11:20am">11:00-11:20am</option>
-      <option value="11:30-11:50am">11:30-11:50am</option>
-      <option value="12:00-12:20pm">12:00-12:20pm</option>
-      <option value="12:30-12:50pm">12:30-12:50pm</option>
-      <option value="1:00-1:20pm">1:00-1:20pm</option>
-    </select>
-    
-    <button onclick="submitForm()">Submit</button>
-    <div class="spinner" id="spinner"></div>
-    <div class="success-message" id="successMessage">Submission successful!</div>
+    <button onclick="submitForm()">Go</button>
   </div>
-  
+  <div class="spinner" id="spinner"></div>
+  <div class="table-container">
+    <table id="dynamicTable">
+      <thead>
+        <tr>
+          <th>Member Name</th>
+          <th>Class Name</th>
+          <th>Center</th>
+          <th>Membership Used</th>
+          <th>WhatsApp Message Sent</th>
+          <th>Pre-Class Chat Completed</th>
+          <th>Comments</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <button class="add-row-btn" onclick="addRow()">Add Row</button>
+    <button id="submit-btn" class="add-row-btn" onclick="finalSubmit()">Submit</button>
+    <div class="success-message" id="successMessage">Records saved successfully!!</div>
+    <div class="error-message" id="errorMessage">An error occurred. Please try again.</div>
+  </div>
   <script>
-    function updateTherapyTimeSlots() {
-      const therapyTimeSlot = document.getElementById('therapyTimeSlot');
-      therapyTimeSlot.innerHTML = `
-        <option value="9:30-9:50am">9:30-9:50am</option>
-        <option value="10:00-10:20am">10:00-10:20am</option>
-        <option value="10:30-10:50am">10:30-10:50am</option>
-        <option value="11:00-11:20am">11:00-11:20am</option>
-        <option value="11:30-11:50am">11:30-11:50am</option>
-        <option value="12:00-12:20pm">12:00-12:20pm</option>
-        <option value="12:30-12:50pm">12:30-12:50pm</option>
-        <option value="1:00-1:20pm">1:00-1:20pm</option>
-      `;
+    function submitForm() {
+      const trainerName = document.getElementById('trainerName').value;
+      const date = document.getElementById('date').value;
+      const center = document.getElementById('center').value;
+      document.getElementById('spinner').style.display = 'block';
+      google.script.run.withSuccessHandler(populateTable).withFailureHandler(onError).filterTable(trainerName, date, center);
+      document.getElementById('tableContainer').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function submitForm() {
-      const firstName = document.getElementById('firstName').value;
-      const lastName = document.getElementById('lastName').value;
-      const phoneNumber = document.getElementById('phoneNumber').value;
-      const email = document.getElementById('email').value;
-      const cryotherapyTimeSlot = document.getElementById('cryotherapyTimeSlot').value;
-      const additionalTherapy = document.getElementById('additionalTherapy').value;
-      const therapyTimeSlot = document.getElementById('therapyTimeSlot').value;
-
-      if (!firstName || !lastName || !phoneNumber || !email || !cryotherapyTimeSlot || !additionalTherapy || !therapyTimeSlot) {
-        alert('Please fill in all fields.');
-        return;
+    function populateTable(options) {
+      document.getElementById('spinner').style.display = 'none';
+      const tableBody = document.getElementById('dynamicTable').getElementsByTagName('tbody')[0];
+      tableBody.innerHTML = '';
+      if (options.length > 0) {
+        options.forEach(option => {
+          const row = tableBody.insertRow();
+          const cell1 = row.insertCell(0);
+          const cell2 = row.insertCell(1);
+          const cell3 = row.insertCell(2);
+          const cell4 = row.insertCell(3);
+          const cell5 = row.insertCell(4);
+          const cell6 = row.insertCell(5);
+          const cell7 = row.insertCell(6);
+          const cell8 = row.insertCell(7);
+          cell1.textContent = option.memberName;
+          cell2.textContent = option.className;
+          cell3.textContent = option.center;
+          cell4.textContent = option.membershipUsed;
+          cell5.innerHTML = '<select><option value="Yes">Yes</option><option value="No">No</option><option value="-">-</option></select>';
+          cell6.innerHTML = '<select><option value="Yes">Yes</option><option value="No">No</option><option value="-">-</option></select>';
+          cell7.innerHTML = '<textarea></textarea>';
+          cell8.innerHTML = '<button class="delete-btn" onclick="deleteRow(this)">Delete</button>';
+        });
+      } else {
+        const row = tableBody.insertRow();
+        const cell = row.insertCell(0);
+        cell.colSpan = 8;
+        cell.textContent = 'No records found';
       }
 
-      document.getElementById('spinner').style.display = 'block';
+      const tableContainer = document.getElementById('tableContainer');
+      if (tableContainer) {
+        tableContainer.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        console.error('Element with ID "tableContainer" not found.');
+      }
+    }
 
-      const data = {
-        firstName,
-        lastName,
-        phoneNumber,
-        email,
-        cryotherapyTimeSlot,
-        additionalTherapy,
-        therapyTimeSlot
-      };
+    function addRow() {
+      const tableBody = document.getElementById('dynamicTable').getElementsByTagName('tbody')[0];
+      const newRow = tableBody.insertRow();
+      for (let i = 0; i < 8; i++) {
+        const cell = newRow.insertCell(i);
+        if (i === 0 || i === 1 || i === 2 || i === 3) {
+          cell.innerHTML = '<input type="text">';
+        } else if (i === 4 || i === 5) {
+          cell.innerHTML = '<select><option value="Yes">Yes</option><option value="No">No</option><option value="-">-</option></select>';
+        } else if (i === 6) {
+          cell.innerHTML = '<textarea></textarea>';
+        } else {
+          cell.innerHTML = '<button class="delete-btn" onclick="deleteRow(this)">Delete</button>';
+        }
+      }
+    }
 
-      google.script.run.withSuccessHandler(onSuccess).submitData(data);
+    function deleteRow(button) {
+      const row = button.parentNode.parentNode;
+      row.parentNode.removeChild(row);
+    }
+
+    function finalSubmit() {
+      const submitButton = document.getElementById('submit-btn');
+      const spinner = document.getElementById('spinner');
+      const successMessage = document.getElementById('successMessage');
+      const errorMessage = document.getElementById('errorMessage');
+
+      // Disable the submit button and show the spinner
+      submitButton.disabled = true;
+      spinner.style.display = 'block';
+
+      const table = document.getElementById('dynamicTable').getElementsByTagName('tbody')[0];
+      const rows = table.getElementsByTagName('tr');
+      const data = [];
+
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        const row = [];
+        for (let j = 0; j < cells.length - 1; j++) { // Exclude the last cell (delete button)
+          const inputElement = cells[j].querySelector('select, input, textarea');
+          if (inputElement) {
+            row.push(inputElement.value);
+          }
+        }
+        if (row.length > 0 && row.every(cell => cell.trim() !== '')) { // Ensure no fields are empty
+          data.push(row);
+        }
+      }
+
+      if (data.length > 0) {
+        google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onError).submitData(data);
+      } else {
+        alert('Please fill in all fields before submitting.');
+        // Re-enable the submit button and hide the spinner if validation fails
+        submitButton.disabled = false;
+        spinner.style.display = 'none';
+      }
     }
 
     function onSuccess() {
-      document.getElementById('spinner').style.display = 'none';
-      document.getElementById('successMessage').style.display = 'block';
+      const successMessage = document.getElementById('successMessage');
+      const spinner = document.getElementById('spinner');
+      const submitButton = document.getElementById('submit-btn');
+
+      successMessage.style.display = 'block';
       setTimeout(() => {
-        document.getElementById('successMessage').style.display = 'none';
+        successMessage.style.display = 'none';
       }, 3000);
       resetFields();
+      // Re-enable the submit button and hide the spinner
+      submitButton.disabled = false;
+      spinner.style.display = 'none';
+    }
+
+    function onError(error) {
+      const errorMessage = document.getElementById('errorMessage');
+      const spinner = document.getElementById('spinner');
+      const submitButton = document.getElementById('submit-btn');
+
+      spinner.style.display = 'none';
+      errorMessage.style.display = 'block';
+      setTimeout(() => {
+        errorMessage.style.display = 'none';
+      }, 3000);
+      // Re-enable the submit button
+      submitButton.disabled = false;
     }
 
     function resetFields() {
-      document.getElementById('firstName').value = '';
-      document.getElementById('lastName').value = '';
-      document.getElementById('phoneNumber').value = '';
-      document.getElementById('email').value = '';
-      document.getElementById('cryotherapyTimeSlot').value = '';
-      document.getElementById('additionalTherapy').value = '';
-      document.getElementById('therapyTimeSlot').value = '';
+      document.getElementById('trainerName').value = '';
+      document.getElementById('date').value = '';
+      document.getElementById('center').value = '';
+      const tableBody = document.getElementById('dynamicTable').getElementsByTagName('tbody')[0];
+      tableBody.innerHTML = '';
     }
   </script>
 </body>
